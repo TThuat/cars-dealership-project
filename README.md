@@ -1,5 +1,7 @@
-# fullstack_developer_capstone
+# xrwvm-fullstack_developer_capstone
 
-Repository Name: xrwvm-fullstack_developer_capstone
+## Project Name
+Fullstack Developer Capstone Project
 
-Project Name: fullstack_developer_capstone
+## Repository Name
+xrwvm-fullstack_developer_capstone
