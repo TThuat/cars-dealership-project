@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dealer Evaluation</title>
+</head>
+<body>
+
+<h1>Dealer Evaluation</h1>
+
+<h2>Products</h2>
+<select id="products"></select>
+
+<h2>Dealers</h2>
+<select id="dealers">
+    <option>--SELECT--</option>
+</select>
+
+<h2>Prices</h2>
+<div id="prices"></div>
+
+<script>
+
+const productURL = "http://127.0.0.1:5000/products";
+const dealerURL = "http://localhost:8080/dealers";
+
+const productsDropdown = document.getElementById('products');
+const dealersDropdown = document.getElementById('dealers');
+const pricesDiv = document.getElementById('prices');
+
+fetch(productURL)
+.then(res => res.json())
+.then(products => {
+
+    products.forEach(product => {
+
+        const option = document.createElement('option');
+
+        option.value = product.id;
+
+        option.textContent = product.name;
+
+        productsDropdown.appendChild(option);
+    });
+});
+
+productsDropdown.addEventListener('change', () => {
+
+    const productId = productsDropdown.value;
+
+    fetch(`${dealerURL}/${productId}`)
+    .then(res => res.json())
+    .then(dealers => {
+
+        dealersDropdown.innerHTML = '';
+
+        const allOption = document.createElement('option');
+        allOption.value = 'all';
+        allOption.textContent = 'All Dealers';
+
+        dealersDropdown.appendChild(allOption);
+
+        dealers.forEach(d => {
+
+            const option = document.createElement('option');
+
+            option.value = d.dealer;
+
+            option.textContent = d.dealer;
+
+            option.dataset.price = d.price;
+
+            dealersDropdown.appendChild(option);
+        });
+
+        pricesDiv.innerHTML = '';
+    });
+});
+
+dealersDropdown.addEventListener('change', () => {
+
+    const selected = dealersDropdown.value;
+
+    const options = dealersDropdown.options;
+
+    pricesDiv.innerHTML = '';
+
+    if(selected === 'all') {
+
+        for(let option of options) {
+
+            if(option.dataset.price) {
+
+                pricesDiv.innerHTML += `
+                    <p>${option.value} - $${option.dataset.price}</p>
+                `;
+            }
+        }
+
+    } else {
+
+        const option = dealersDropdown.selectedOptions[0];
+
+        pricesDiv.innerHTML =
+            `<p>Price: $${option.dataset.price}</p>`;
+    }
+});
+
+</script>
+
+</body>
+</html>
